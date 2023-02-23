@@ -17,7 +17,7 @@ public class Game : MonoBehaviour
     private GameBoard gameBoard = new GameBoard();
     private Cell[,] state;
 
-    private bool gameOver;
+    private bool gameOver = true;
 
     public TMPro.TMP_Dropdown dropdown;
     public UnityEngine.UI.Text timerText;
