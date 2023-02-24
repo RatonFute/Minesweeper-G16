@@ -1,10 +1,15 @@
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
-    public int width;
-    public int height;
-    public int mineCount;
+    int width;
+    int height;
+    int mineCount;
+    bool firstClick;
+    int tempTime;
+    int timeLastGame;
 
     private enum Difficulty
     {
@@ -19,8 +24,9 @@ public class Game : MonoBehaviour
 
     private bool gameOver = true;
 
-    public TMPro.TMP_Dropdown dropdown;
-    public UnityEngine.UI.Text timerText;
+    [SerializeField] TMPro.TMP_Dropdown dropdown;
+    [SerializeField] UnityEngine.UI.Text timerText;
+    [SerializeField] UnityEngine.UI.Text winLoseText;
     float timePass = 0;
 
     private void Awake()
@@ -44,21 +50,28 @@ public class Game : MonoBehaviour
 
         switch (difficulty)
         {
-            case Game.Difficulty.easy: width = 8; height = 8; mineCount = 10; break;
-            case Game.Difficulty.medium: width = 11; height = 11; mineCount = 25; break;
+            case Game.Difficulty.easy: width = 10; height = 10; mineCount = 10; break;
+            case Game.Difficulty.medium: width = 12; height = 12; mineCount = 25; break;
             case Game.Difficulty.hard: width = 16; height = 16; mineCount = 40; break; 
 
         }
     }
+
+
     public void NewGame()
     {
+        
+        timePass = 0;
+        firstClick = true;
+        winLoseText.text = "";
         setDifficulty(); 
         state = new Cell[width,height];
         gameOver = false;
 
         GenerateCelles();
-        GenerateMines();
-        GenerateNumber();
+        
+        //GenerateMines();
+        //GenerateNumber();
         Camera.main.orthographicSize = 10;
         Camera.main.transform.position = new Vector3(width/2,height/2,-10);
 
@@ -98,7 +111,11 @@ public class Game : MonoBehaviour
                     }
                 }
             }
-            state[x, y].type = Cell.Type.Mine;
+            if(!(x == MousePositionOnGameBoard().x && y == MousePositionOnGameBoard().y))
+            {
+                state[x, y].type = Cell.Type.Mine;
+            }
+            
         }
     }
 
@@ -160,12 +177,8 @@ public class Game : MonoBehaviour
     private void Update()
     {
 
-        
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            NewGame();
-        }else if (!gameOver)
+      
+        if (!gameOver)
         {
             if (Input.GetMouseButtonDown(1))
             {
@@ -173,41 +186,59 @@ public class Game : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                Reveal();
-            }
-            timePass += Time.deltaTime;
-            int tempTime = (int)timePass;
-            timerText.text = "Time : " + tempTime.ToString();
-        }
 
-        
+                if (firstClick)
+                {
+                    GenerateMines();
+                    GenerateNumber();
+                    firstClick = false;
+                }
+                Reveal();
+                
+                
+            }
+
+            timePass += Time.deltaTime;
+            tempTime = (int)timePass;
+            timerText.text = "Time : " + tempTime.ToString();
+
+        }
+        else
+        {
+            timeLastGame = (int)timePass;
+            tempTime = timeLastGame;
+            timerText.text = "You played " + tempTime.ToString() + "s";
+            timePass = 0;
+        }
     }
 
 
     private void Flag()
     {
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int cellPosition = gameBoard.tilemap.WorldToCell(worldPosition);
-        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+        
+        Cell cell = GetCell(MousePositionOnGameBoard().x, MousePositionOnGameBoard().y);
 
-        if(cell.type == Cell.Type.Invalid)
+        if (cell.type == Cell.Type.Invalid)
         {
             return;
         }
         cell.flagged = !cell.flagged;
-        state[cellPosition.x, cellPosition.y] = cell;
+        state[MousePositionOnGameBoard().x, MousePositionOnGameBoard().y] = cell;
         gameBoard.Draw(width, height, state);
 
     }
 
-
-    private void Reveal()
+    private Vector3Int MousePositionOnGameBoard()
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = gameBoard.tilemap.WorldToCell(worldPosition);
-        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+        return cellPosition;
+    }
+    private void Reveal()
+    {
+        Cell cell = GetCell(MousePositionOnGameBoard().x, MousePositionOnGameBoard().y);
 
-        if( cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
+        if ( cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
         {
             return;
         }
@@ -223,7 +254,7 @@ public class Game : MonoBehaviour
                 break;
             default:
                 cell.revealed = true;
-                state[cellPosition.x, cellPosition.y] = cell;
+                state[MousePositionOnGameBoard().x, MousePositionOnGameBoard().y] = cell;
                 CheckWinCondition();
                 break;
         }
@@ -254,7 +285,7 @@ public class Game : MonoBehaviour
 
     private void Explode(Cell cell)
     {
-        Debug.Log("game over");
+        winLoseText.text = "You lost !";
         gameOver = true;
 
         cell.revealed = true;
@@ -292,7 +323,8 @@ public class Game : MonoBehaviour
             }
         }
 
-        Debug.Log("you won");
+
+        winLoseText.text = "You won !";
         gameOver = true;
 
         for (int x = 0; x < width; x++)

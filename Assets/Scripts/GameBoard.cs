@@ -7,19 +7,19 @@ using UnityEngine.Tilemaps;
 public class GameBoard : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
-    public Tile tileUnknown;
-    public Tile tileEmpty;
-    public Tile tileMine;
-    public Tile tileExploded;
-    public Tile tileFlag;
-    public Tile tileNum1;
-    public Tile tileNum2;
-    public Tile tileNum3;
-    public Tile tileNum4;
-    public Tile tileNum5;
-    public Tile tileNum6;
-    public Tile tileNum7;
-    public Tile tileNum8;
+    [SerializeField] Tile tileUnknown;
+    [SerializeField] Tile tileEmpty;
+    [SerializeField] Tile tileMine;
+    [SerializeField] Tile tileExploded;
+    [SerializeField] Tile tileFlag;
+    [SerializeField] Tile tileNum1;
+    [SerializeField] Tile tileNum2;
+    [SerializeField] Tile tileNum3;
+    [SerializeField] Tile tileNum4;
+    [SerializeField] Tile tileNum5;
+    [SerializeField] Tile tileNum6;
+    [SerializeField] Tile tileNum7;
+    [SerializeField] Tile tileNum8;
     private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
