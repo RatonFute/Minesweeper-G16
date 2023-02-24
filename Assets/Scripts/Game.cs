@@ -6,6 +6,8 @@ public class Game : MonoBehaviour
     int width;
     int height;
     int mineCount;
+    float score;
+    int tempScore;
     bool firstClick;
     int tempTime;
     int timeLastGame;
@@ -26,6 +28,7 @@ public class Game : MonoBehaviour
     [SerializeField] TMPro.TMP_Dropdown dropdown;
     [SerializeField] UnityEngine.UI.Text timerText;
     [SerializeField] UnityEngine.UI.Text winLoseText;
+    [SerializeField] UnityEngine.UI.Text scoreText;
     float timePass = 0;
 
     private void Awake()
@@ -59,19 +62,12 @@ public class Game : MonoBehaviour
 
     public void NewGame()
     {
-        
+        score = 0;
         timePass = 0;
         firstClick = true;
         winLoseText.text = "";
         setDifficulty();
-        
         state = new Cell[width,height];
-        int getLength = state.GetLength(0);
-        int getLength1 = state.GetLength(1);
-        Debug.Log(getLength + " one");
-        Debug.Log(getLength1 + " two");
-
-
         gameOver = false;
 
         GenerateCelles();
@@ -206,10 +202,19 @@ public class Game : MonoBehaviour
                 
                 
             }
-
+            
             timePass += Time.deltaTime;
             tempTime = (int)timePass;
             timerText.text = "Time : " + tempTime.ToString();
+
+            // score decrease every frame. need to decrease score every second only !
+            //score -= tempTime;
+            //if (score < 0)
+            //{
+            //    score = 0;
+            //}
+            //tempScore = (int)score;
+            //scoreText.text = "Your score : " + tempScore.ToString();
 
         }
         else
@@ -218,7 +223,9 @@ public class Game : MonoBehaviour
             tempTime = timeLastGame;
             timerText.text = "You played " + tempTime.ToString() + "s";
             timePass = 0;
+            tempScore= 0;
         }
+        
     }
 
 
@@ -263,6 +270,7 @@ public class Game : MonoBehaviour
                 break;
             default:
                 cell.revealed = true;
+                score += 10;
                 state[MousePositionOnGameBoard().x, MousePositionOnGameBoard().y] = cell;
                 CheckWinCondition();
                 break;
@@ -281,6 +289,7 @@ public class Game : MonoBehaviour
 
 
         cell.revealed = true;
+        score += 10;
         state[cell.position.x, cell.position.y] = cell;
 
         if(cell.type == Cell.Type.Empty) 
