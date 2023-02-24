@@ -1,3 +1,4 @@
+using System;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -64,8 +65,15 @@ public class Game : MonoBehaviour
         timePass = 0;
         firstClick = true;
         winLoseText.text = "";
-        setDifficulty(); 
+        setDifficulty();
+        
         state = new Cell[width,height];
+        int getLength = state.GetLength(0);
+        int getLength1 = state.GetLength(1);
+        Debug.Log(getLength + " one");
+        Debug.Log(getLength1 + " two");
+
+
         gameOver = false;
 
         GenerateCelles();
@@ -176,7 +184,10 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
 
+        }
       
         if (!gameOver)
         {

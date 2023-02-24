@@ -1191,9 +1191,9 @@ RectTransform:
   m_Father: {fileID: 2002715529}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 230.28}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -41.219}
   m_SizeDelta: {x: 238.6526, y: 56.2175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1017277798
@@ -1223,7 +1223,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -2280,9 +2280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a386d2762cf9a54b901b7c4aed9f206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 0
-  height: 0
-  mineCount: 0
   dropdown: {fileID: 487048540}
   timerText: {fileID: 494586773}
   winLoseText: {fileID: 1017277798}
