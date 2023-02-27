@@ -277,9 +277,13 @@ public class Game : MonoBehaviour
         if(cell.type == Cell.Type.Empty) 
         { 
             Flood(GetCell(cell.position.x-1,cell.position.y)); 
-            Flood(GetCell(cell.position.x+1,cell.position.y)); 
-            Flood(GetCell(cell.position.x,cell.position.y-1)); 
+            Flood(GetCell(cell.position.x-1,cell.position.y+1)); 
             Flood(GetCell(cell.position.x,cell.position.y+1)); 
+            Flood(GetCell(cell.position.x+1,cell.position.y+1)); 
+            Flood(GetCell(cell.position.x+1,cell.position.y)); 
+            Flood(GetCell(cell.position.x+1,cell.position.y-1)); 
+            Flood(GetCell(cell.position.x,cell.position.y-1)); 
+            Flood(GetCell(cell.position.x-1,cell.position.y-1)); 
         }
     }
 
@@ -369,7 +373,7 @@ public class Game : MonoBehaviour
             {
                 Cell cell = state[x, y];
 
-                if (cell.type == Cell.Type.Mine && cell.revealed)
+                if (cell.type == Cell.Type.Mine && cell.flagged)
                 {
                     count++;
                 }
