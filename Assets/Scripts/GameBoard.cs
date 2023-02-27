@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -23,23 +21,27 @@ public class GameBoard : MonoBehaviour
     private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
+
     }
 
     public void Draw(int _width,int _height, Cell[,] state)
     {
+        
         int width = _width;
         int height = _height;
-        
-        for(int x = 0; x < width; x++)
+        tilemap.ClearAllTiles();
+
+        for (int x = 0; x < width; x++)
         {
             for(int y = 0; y < height; y++)
             {
+                
                 Cell cell = state[x, y];
                 tilemap.SetTile(cell.position, GetTile(cell));
             }   
         }
-       
     }
+
 
     private Tile GetTile(Cell cell)
     {
