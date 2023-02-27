@@ -57,9 +57,7 @@ public class Game : MonoBehaviour
             case 0: difficulty = Game.Difficulty.easy; Debug.Log("easy"); break;
             case 1: difficulty = Game.Difficulty.medium; Debug.Log("medium"); break;
             case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
-
             case 3: difficulty = Game.Difficulty.custom; Debug.Log("custom"); break;
-
             case 4: difficulty = Game.Difficulty.random; Debug.Log("Random"); break;
 
         }
@@ -269,9 +267,10 @@ public class Game : MonoBehaviour
         }
         if (customGame)
         {
-            SlidermineCount.maxValue = width * height-1;
+            
             width = (int)Sliderwidth.value;
             height = (int)Sliderheight.value;
+            SlidermineCount.maxValue = width * height - 1;
             mineCount = (int)SlidermineCount.value;
         }
         
