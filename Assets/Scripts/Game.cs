@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -17,6 +18,7 @@ public class Game : MonoBehaviour
         easy,
         medium,
         hard,
+        random,
     }
     private Difficulty difficulty;
 
@@ -44,6 +46,7 @@ public class Game : MonoBehaviour
             case 0: difficulty = Game.Difficulty.easy; Debug.Log("easy"); break;
             case 1: difficulty = Game.Difficulty.medium; Debug.Log("medium"); break;
             case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
+            case 3: difficulty = Game.Difficulty.random; Debug.Log("Random"); break;
         }
     }
     public void setDifficulty()
@@ -55,6 +58,11 @@ public class Game : MonoBehaviour
             case Game.Difficulty.easy: width = 10; height = 10; mineCount = 10; break;
             case Game.Difficulty.medium: width = 12; height = 12; mineCount = 25; break;
             case Game.Difficulty.hard: width = 16; height = 16; mineCount = 40; break; 
+            case Game.Difficulty.random:
+                width = UnityEngine.Random.Range(3, 20);
+                height = UnityEngine.Random.Range(3, 20);
+                mineCount = UnityEngine.Random.Range(1, width*height/2);
+                break;
 
         }
     }
@@ -380,6 +388,8 @@ public class Game : MonoBehaviour
     {
         return x>=0 && x<width && y>=0 && y<height;
     }
+
+    
 
     private void FlagThemAll()
     {
