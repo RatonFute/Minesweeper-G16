@@ -18,10 +18,12 @@ public class GameBoard : MonoBehaviour
     [SerializeField] Tile tileNum6;
     [SerializeField] Tile tileNum7;
     [SerializeField] Tile tileNum8;
+
     private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
 
+        
     }
 
     public void Draw(int _width,int _height, Cell[,] state)
@@ -87,5 +89,7 @@ public class GameBoard : MonoBehaviour
             default: return null;
         }
     }
+
+
 
 }

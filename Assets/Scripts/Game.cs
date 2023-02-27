@@ -1,22 +1,25 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
     int width;
     int height;
     int mineCount;
-    float score;
     int tempScore;
-    bool firstClick;
     int tempTime;
     int timeLastGame;
+    float score;
+    float cameraZoom;
+    bool firstClick;
+    bool customGame;
 
     private enum Difficulty
     {
         easy,
         medium,
         hard,
+        custom,
     }
     private Difficulty difficulty;
 
@@ -29,13 +32,21 @@ public class Game : MonoBehaviour
     [SerializeField] UnityEngine.UI.Text timerText;
     [SerializeField] UnityEngine.UI.Text winLoseText;
     [SerializeField] UnityEngine.UI.Text scoreText;
+    [SerializeField] UnityEngine.UI.Text widthText;
+    [SerializeField] UnityEngine.UI.Text heightText;
+    [SerializeField] UnityEngine.UI.Text mineCountText;
+    [SerializeField] Slider Sliderwidth;
+    [SerializeField] Slider Sliderheight;
+    [SerializeField] Slider SlidermineCount;
     float timePass = 0;
 
     private void Awake()
     {
         gameBoard = GetComponentInChildren<GameBoard>();
+        Slider heightSetting = Sliderheight.GetComponent<Slider>();
+        Slider widthSetting = Sliderwidth.GetComponent<Slider>();
+        Slider mineCountSetting = SlidermineCount.GetComponent<Slider>();
     }
-
   
     public void DropDownSelectDifficulty()
     {
@@ -44,19 +55,38 @@ public class Game : MonoBehaviour
             case 0: difficulty = Game.Difficulty.easy; Debug.Log("easy"); break;
             case 1: difficulty = Game.Difficulty.medium; Debug.Log("medium"); break;
             case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
+            case 3: difficulty = Game.Difficulty.custom; Debug.Log("custom"); break;
         }
     }
     public void setDifficulty()
     {
         //get dropdown option for the switch
-
+        customGame = false;
         switch (difficulty)
         {
-            case Game.Difficulty.easy: width = 10; height = 10; mineCount = 10; break;
-            case Game.Difficulty.medium: width = 12; height = 12; mineCount = 25; break;
-            case Game.Difficulty.hard: width = 16; height = 16; mineCount = 40; break; 
-
+            case Game.Difficulty.easy: 
+                width = 10; 
+                height = 10; 
+                mineCount = 10;
+                cameraZoom = 10;
+                break;
+            case Game.Difficulty.medium: 
+                width = 12; 
+                height = 12; 
+                mineCount = 25;
+                cameraZoom = 10;
+                break;
+            case Game.Difficulty.hard: 
+                width = 16; 
+                height = 16; 
+                mineCount = 40;
+                cameraZoom = 10;
+                break; 
+            case Game.Difficulty.custom:
+                customGame= true;
+                break;
         }
+        
     }
 
 
@@ -69,12 +99,12 @@ public class Game : MonoBehaviour
         setDifficulty();
         state = new Cell[width,height];
         gameOver = false;
-
+        
         GenerateCelles();
         
         //GenerateMines();
         //GenerateNumber();
-        Camera.main.orthographicSize = 10;
+        Camera.main.orthographicSize = cameraZoom;
         Camera.main.transform.position = new Vector3(width/2,height/2,-10);
 
         gameBoard.Draw(width,height,state);
@@ -198,22 +228,20 @@ public class Game : MonoBehaviour
                     firstClick = false;
                 }
                 Reveal();
-                
-                
             }
             
             timePass += Time.deltaTime;
             tempTime = (int)timePass;
             timerText.text = "Time : " + tempTime.ToString();
 
-            // score decrease every frame. need to decrease score every second only !
-            //score -= tempTime;
-            //if (score < 0)
-            //{
-            //    score = 0;
-            //}
-            //tempScore = (int)score;
-            //scoreText.text = "Your score : " + tempScore.ToString();
+       
+            
+            if (score < 0)
+            {
+                score = 0;
+            }
+            tempScore = (int)score;
+            scoreText.text = "Your score : " + tempScore.ToString();
 
         }
         else
@@ -224,7 +252,24 @@ public class Game : MonoBehaviour
             timePass = 0;
             tempScore= 0;
         }
+        if (customGame)
+        {
+            SlidermineCount.maxValue = width * height-1;
+            width = (int)Sliderwidth.value;
+            height = (int)Sliderheight.value;
+            mineCount = (int)SlidermineCount.value;
+        }
         
+            cameraZoom = 20;
+            int widthValue = (int)Sliderwidth.value;
+            int heightValue = (int)Sliderheight.value;
+            int mineCountValue = (int)SlidermineCount.value;
+            widthText.text = widthValue.ToString();
+            heightText.text = heightValue.ToString();
+            mineCountText.text = mineCountValue.ToString();
+       
+        
+
     }
 
 
@@ -309,7 +354,6 @@ public class Game : MonoBehaviour
     {
         winLoseText.text = "You lost !";
         gameOver = true;
-
         cell.revealed = true;
         cell.exploded = true;
 
