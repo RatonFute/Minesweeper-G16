@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
@@ -26,6 +27,7 @@ public class Game : MonoBehaviour
     private Difficulty difficulty;
 
     private GameBoard gameBoard = new GameBoard();
+    private CustomSettings customSetting = new CustomSettings();
     private Cell[,] state;
 
     private bool gameOver = true;
@@ -34,20 +36,14 @@ public class Game : MonoBehaviour
     [SerializeField] UnityEngine.UI.Text timerText;
     [SerializeField] UnityEngine.UI.Text winLoseText;
     [SerializeField] UnityEngine.UI.Text scoreText;
-    [SerializeField] UnityEngine.UI.Text widthText;
-    [SerializeField] UnityEngine.UI.Text heightText;
-    [SerializeField] UnityEngine.UI.Text mineCountText;
-    [SerializeField] Slider Sliderwidth;
-    [SerializeField] Slider Sliderheight;
-    [SerializeField] Slider SlidermineCount;
+
     float timePass = 0;
 
     private void Awake()
     {
         gameBoard = GetComponentInChildren<GameBoard>();
-        Slider heightSetting = Sliderheight.GetComponent<Slider>();
-        Slider widthSetting = Sliderwidth.GetComponent<Slider>();
-        Slider mineCountSetting = SlidermineCount.GetComponent<Slider>();
+        customSetting = GetComponent<CustomSettings>();
+        
     }
   
     public void DropDownSelectDifficulty()
@@ -59,7 +55,6 @@ public class Game : MonoBehaviour
             case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
             case 3: difficulty = Game.Difficulty.custom; Debug.Log("custom"); break;
             case 4: difficulty = Game.Difficulty.random; Debug.Log("Random"); break;
-
         }
     }
     public void setDifficulty()
@@ -88,7 +83,12 @@ public class Game : MonoBehaviour
                 cameraZoom = 10;
                 break; 
             case Game.Difficulty.custom:
-                customGame= true;
+                SceneManager.LoadScene("CustomSettings", LoadSceneMode.Additive);
+                if (customSetting.loadedSettings)
+                {
+                    getCustomSettings();
+                    NewGame();
+                }
                 break;
 
             case Game.Difficulty.random:
@@ -102,9 +102,16 @@ public class Game : MonoBehaviour
         
     }
 
+    public void getCustomSettings()
+    {
+            width = customSetting.Width;
+            height = customSetting.Height;
+            mineCount = customSetting.MineCount;
+    }
 
     public void NewGame()
     {
+    
         score = 0;
         timePass = 0;
         firstClick = true;
@@ -115,8 +122,7 @@ public class Game : MonoBehaviour
         
         GenerateCelles();
         
-        //GenerateMines();
-        //GenerateNumber();
+        
         Camera.main.orthographicSize = cameraZoom;
         Camera.main.transform.position = new Vector3(width/2,height/2,-10);
 
@@ -265,25 +271,7 @@ public class Game : MonoBehaviour
             timePass = 0;
             tempScore= 0;
         }
-        if (customGame)
-        {
-            
-            width = (int)Sliderwidth.value;
-            height = (int)Sliderheight.value;
-            SlidermineCount.maxValue = width * height - 1;
-            mineCount = (int)SlidermineCount.value;
-        }
         
-            cameraZoom = 20;
-            int widthValue = (int)Sliderwidth.value;
-            int heightValue = (int)Sliderheight.value;
-            int mineCountValue = (int)SlidermineCount.value;
-            widthText.text = widthValue.ToString();
-            heightText.text = heightValue.ToString();
-            mineCountText.text = mineCountValue.ToString();
-       
-        
-
     }
 
 
