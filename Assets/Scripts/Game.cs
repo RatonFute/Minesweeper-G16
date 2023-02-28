@@ -72,7 +72,7 @@ public class Game : MonoBehaviour
     public void setDifficulty()
     {
         //get dropdown option for the switch
-
+        customGame = false;
         switch (difficulty)
         {
 
@@ -109,7 +109,7 @@ public class Game : MonoBehaviour
 
     }
 
-    
+
 
 
     public void NewGame()
@@ -233,7 +233,10 @@ public class Game : MonoBehaviour
 
         if (!gameOver)
         {
-            //if (Inmput.keyboard)
+            if (Input.anyKey)
+            {
+                move();
+            }
             if (Input.GetMouseButtonDown(1))
             {
                 Flag();
@@ -281,7 +284,7 @@ public class Game : MonoBehaviour
             mineCount = (int)SlidermineCount.value;
         }
 
-        Camera.main.orthographicSize += Input.mouseScrollDelta.y* -0.3f; //Last float = sensitivity
+        Camera.main.orthographicSize += Input.mouseScrollDelta.y * -0.3f; //Last float = sensitivity
 
         int widthValue = (int)Sliderwidth.value;
         int heightValue = (int)Sliderheight.value;
@@ -292,6 +295,26 @@ public class Game : MonoBehaviour
 
 
 
+    }
+
+    private void move()
+    {
+        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow))
+        {
+            Camera.main.transform.position += new Vector3(0, 4 * Time.deltaTime, 0);
+        }
+        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            Camera.main.transform.position += new Vector3(-4 * Time.deltaTime, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            Camera.main.transform.position += new Vector3(0, -4 * Time.deltaTime, 0);
+        }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            Camera.main.transform.position += new Vector3(4 * Time.deltaTime, 0, 0);
+        }
     }
 
 
