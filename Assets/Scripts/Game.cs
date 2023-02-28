@@ -106,7 +106,13 @@ public class Game : MonoBehaviour
                 mineCount = UnityEngine.Random.Range(1, width * height / 2);
                 break;
 
-
+            default: 
+                customGame = false;
+                width = 10;
+                height = 10;
+                mineCount = 10;
+                cameraZoom = 10;
+                break;
         }
 
     }
@@ -292,15 +298,16 @@ public class Game : MonoBehaviour
             height = (int)Sliderheight.value;
             SlidermineCount.maxValue = width * height - 1;
             mineCount = (int)SlidermineCount.value;
-        }
-
-        
             int widthValue = (int)Sliderwidth.value;
             int heightValue = (int)Sliderheight.value;
             int mineCountValue = (int)SlidermineCount.value;
             widthText.text = widthValue.ToString();
             heightText.text = heightValue.ToString();
             mineCountText.text = mineCountValue.ToString();
+        }
+
+
+       
 
 
     }
