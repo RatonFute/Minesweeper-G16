@@ -233,6 +233,7 @@ public class Game : MonoBehaviour
 
         if (!gameOver)
         {
+            //if (Inmput.keyboard)
             if (Input.GetMouseButtonDown(1))
             {
                 Flag();
