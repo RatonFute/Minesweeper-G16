@@ -246,7 +246,9 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-
+        int widthValue;
+        int heightValue;
+        int mineCountValue;
         if (!gameOver)
         {
             //if (Inmput.keyboard)
@@ -296,24 +298,16 @@ public class Game : MonoBehaviour
             height = (int)Sliderheight.value;
             SlidermineCount.maxValue = width * height - 1;
             mineCount = (int)SlidermineCount.value;
-            int widthValue = (int)Sliderwidth.value;
-            int heightValue = (int)Sliderheight.value;
-            int mineCountValue = (int)SlidermineCount.value;
+            widthValue = (int)Sliderwidth.value;
+            heightValue = (int)Sliderheight.value;
+            mineCountValue = (int)SlidermineCount.value;
             widthText.text = widthValue.ToString();
             heightText.text = heightValue.ToString();
             mineCountText.text = mineCountValue.ToString();
         }
 
         Camera.main.orthographicSize += Input.mouseScrollDelta.y* -0.3f; //Last float = sensitivity
-
-        int widthValue = (int)Sliderwidth.value;
-        int heightValue = (int)Sliderheight.value;
-        int mineCountValue = (int)SlidermineCount.value;
-        widthText.text = widthValue.ToString();
-        heightText.text = heightValue.ToString();
-        mineCountText.text = mineCountValue.ToString();
-
-       
+ 
 
 
     }
