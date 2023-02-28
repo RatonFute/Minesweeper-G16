@@ -56,7 +56,7 @@ public class Game : MonoBehaviour
         Slider widthSetting = Sliderwidth.GetComponent<Slider>();
         Slider mineCountSetting = SlidermineCount.GetComponent<Slider>();
     }
-  
+
     public void DropDownSelectDifficulty()
     {
         switch (dropdown.value)
@@ -72,41 +72,46 @@ public class Game : MonoBehaviour
     public void setDifficulty()
     {
         //get dropdown option for the switch
-        customGame = false;
+
         switch (difficulty)
         {
 
-            case Game.Difficulty.easy: 
-                width = 10; 
-                height = 10; 
+            case Game.Difficulty.easy:
+                width = 10;
+                height = 10;
                 mineCount = 10;
                 cameraZoom = 10;
                 break;
-            case Game.Difficulty.medium: 
-                width = 12; 
-                height = 12; 
+            case Game.Difficulty.medium:
+                width = 12;
+                height = 12;
                 mineCount = 25;
                 cameraZoom = 10;
                 break;
-            case Game.Difficulty.hard: 
-                width = 16; 
-                height = 16; 
+            case Game.Difficulty.hard:
+                width = 16;
+                height = 16;
                 mineCount = 40;
                 cameraZoom = 10;
-                break; 
+                break;
             case Game.Difficulty.custom:
-                customGame= true;
+                customGame = true;
                 break;
 
             case Game.Difficulty.random:
                 width = UnityEngine.Random.Range(3, 20);
                 height = UnityEngine.Random.Range(3, 20);
-                mineCount = UnityEngine.Random.Range(1, width*height/2);
+                mineCount = UnityEngine.Random.Range(1, width * height / 2);
                 break;
 
 
         }
-        
+
+    }
+
+    public void SetCamera(float zoom)
+    {
+        Camera.main.orthographicSize = zoom;
     }
 
 
@@ -117,29 +122,30 @@ public class Game : MonoBehaviour
         firstClick = true;
         winLoseText.text = "";
         setDifficulty();
-        state = new Cell[width,height];
+        state = new Cell[width, height];
         gameOver = false;
-        
+
         GenerateCelles();
-        
+
         //GenerateMines();
         //GenerateNumber();
-        Camera.main.orthographicSize = cameraZoom;
-        Camera.main.transform.position = new Vector3(width/2,height/2,-10);
 
-        gameBoard.Draw(width,height,state);
+        Camera.main.orthographicSize = cameraZoom;
+        Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
+
+        gameBoard.Draw(width, height, state);
     }
 
     private void GenerateCelles()
     {
-        for(int x =0; x<width; x++)
+        for (int x = 0; x < width; x++)
         {
-            for(int y=0;y<height;y++) 
+            for (int y = 0; y < height; y++)
             {
                 Cell cell = new Cell();
                 cell.position = new Vector3Int(x, y, 0);
                 cell.type = Cell.Type.Empty;
-                state[x,y] = cell;
+                state[x, y] = cell;
             }
         }
     }
@@ -163,7 +169,7 @@ public class Game : MonoBehaviour
                     }
                 }
             }
-            if(!(x == MousePositionOnGameBoard().x && y == MousePositionOnGameBoard().y))
+            if (!(x == MousePositionOnGameBoard().x && y == MousePositionOnGameBoard().y))
             {
                 state[x, y].type = Cell.Type.Mine;
             }
@@ -185,7 +191,7 @@ public class Game : MonoBehaviour
 
                 cell.number = CountMines(x, y);
 
-                if(cell.number > 0)
+                if (cell.number > 0)
                 {
                     cell.type = Cell.Type.Number;
                 }
@@ -200,11 +206,11 @@ public class Game : MonoBehaviour
     {
         int count = 0;
 
-        for(int adjacentX = -1; adjacentX <=1; adjacentX++)
+        for (int adjacentX = -1; adjacentX <= 1; adjacentX++)
         {
-            for(int adjacentY = -1; adjacentY <=1; adjacentY++)
+            for (int adjacentY = -1; adjacentY <= 1; adjacentY++)
             {
-                if(adjacentX == 0 && adjacentY == 0)
+                if (adjacentX == 0 && adjacentY == 0)
                 {
                     continue;
                 }
@@ -212,9 +218,9 @@ public class Game : MonoBehaviour
                 int x = cellX + adjacentX;
                 int y = cellY + adjacentY;
 
-                
 
-                if (GetCell(x,y).type == Cell.Type.Mine)
+
+                if (GetCell(x, y).type == Cell.Type.Mine)
                 {
                     count++;
                 }
@@ -227,11 +233,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
 
-        }
-      
         if (!gameOver)
         {
             if (Input.GetMouseButtonDown(1))
@@ -249,13 +251,13 @@ public class Game : MonoBehaviour
                 }
                 Reveal();
             }
-            
+
             timePass += Time.deltaTime;
             tempTime = (int)timePass;
             timerText.text = "Time : " + tempTime.ToString();
 
-       
-            
+
+
             if (score < 0)
             {
                 score = 0;
@@ -270,33 +272,33 @@ public class Game : MonoBehaviour
             tempTime = timeLastGame;
             timerText.text = "You played " + tempTime.ToString() + "s";
             timePass = 0;
-            tempScore= 0;
+            tempScore = 0;
         }
         if (customGame)
         {
-            
+
             width = (int)Sliderwidth.value;
             height = (int)Sliderheight.value;
             SlidermineCount.maxValue = width * height - 1;
             mineCount = (int)SlidermineCount.value;
         }
+
         
-            cameraZoom = 20;
-            int widthValue = (int)Sliderwidth.value;
-            int heightValue = (int)Sliderheight.value;
-            int mineCountValue = (int)SlidermineCount.value;
-            widthText.text = widthValue.ToString();
-            heightText.text = heightValue.ToString();
-            mineCountText.text = mineCountValue.ToString();
-       
-        
+        int widthValue = (int)Sliderwidth.value;
+        int heightValue = (int)Sliderheight.value;
+        int mineCountValue = (int)SlidermineCount.value;
+        widthText.text = widthValue.ToString();
+        heightText.text = heightValue.ToString();
+        mineCountText.text = mineCountValue.ToString();
+
+
 
     }
 
 
     private void Flag()
     {
-        
+
         Cell cell = GetCell(MousePositionOnGameBoard().x, MousePositionOnGameBoard().y);
 
         if (cell.type == Cell.Type.Invalid)
@@ -320,7 +322,7 @@ public class Game : MonoBehaviour
     {
         Cell cell = GetCell(MousePositionOnGameBoard().x, MousePositionOnGameBoard().y);
 
-        if ( cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
+        if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
         {
             return;
         }
@@ -342,32 +344,32 @@ public class Game : MonoBehaviour
                 break;
         }
 
-       
 
-        
+
+
         gameBoard.Draw(width, height, state);
     }
 
     private void Flood(Cell cell)
     {
-        if(cell.revealed) return;
-        if(cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) return;
+        if (cell.revealed) return;
+        if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) return;
 
 
         cell.revealed = true;
         score += 10;
         state[cell.position.x, cell.position.y] = cell;
 
-        if(cell.type == Cell.Type.Empty) 
-        { 
-            Flood(GetCell(cell.position.x-1,cell.position.y)); 
-            Flood(GetCell(cell.position.x-1,cell.position.y+1)); 
-            Flood(GetCell(cell.position.x,cell.position.y+1)); 
-            Flood(GetCell(cell.position.x+1,cell.position.y+1)); 
-            Flood(GetCell(cell.position.x+1,cell.position.y)); 
-            Flood(GetCell(cell.position.x+1,cell.position.y-1)); 
-            Flood(GetCell(cell.position.x,cell.position.y-1)); 
-            Flood(GetCell(cell.position.x-1,cell.position.y-1)); 
+        if (cell.type == Cell.Type.Empty)
+        {
+            Flood(GetCell(cell.position.x - 1, cell.position.y));
+            Flood(GetCell(cell.position.x - 1, cell.position.y + 1));
+            Flood(GetCell(cell.position.x, cell.position.y + 1));
+            Flood(GetCell(cell.position.x + 1, cell.position.y + 1));
+            Flood(GetCell(cell.position.x + 1, cell.position.y));
+            Flood(GetCell(cell.position.x + 1, cell.position.y - 1));
+            Flood(GetCell(cell.position.x, cell.position.y - 1));
+            Flood(GetCell(cell.position.x - 1, cell.position.y - 1));
         }
     }
 
@@ -380,16 +382,16 @@ public class Game : MonoBehaviour
 
         state[cell.position.x, cell.position.y] = cell;
 
-        for(int x =0; x< width; x++)
+        for (int x = 0; x < width; x++)
         {
-            for(int y =0; y< height; y++)
+            for (int y = 0; y < height; y++)
             {
-                cell = state[x,y];
+                cell = state[x, y];
 
-                if(cell.type == Cell.Type.Mine)
+                if (cell.type == Cell.Type.Mine)
                 {
                     cell.revealed = true;
-                    state[x,y] = cell;
+                    state[x, y] = cell;
                 }
             }
         }
@@ -398,12 +400,12 @@ public class Game : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        for(int x = 0; x< width;x++)
+        for (int x = 0; x < width; x++)
         {
-            for( int y = 0; y< height;y++)
+            for (int y = 0; y < height; y++)
             {
                 Cell cell = state[x, y];
-                if(cell.type != Cell.Type.Mine && !cell.revealed)
+                if (cell.type != Cell.Type.Mine && !cell.revealed)
                 {
                     return;
                 }
@@ -431,9 +433,9 @@ public class Game : MonoBehaviour
 
     private Cell GetCell(int x, int y)
     {
-        if (IsValid(x,y))
+        if (IsValid(x, y))
         {
-            return state[x,y];
+            return state[x, y];
         }
         else
         {
@@ -441,12 +443,12 @@ public class Game : MonoBehaviour
         }
     }
 
-    private bool IsValid(int x,int y)
+    private bool IsValid(int x, int y)
     {
-        return x>=0 && x<width && y>=0 && y<height;
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    
+
 
     private void FlagThemAll()
     {
