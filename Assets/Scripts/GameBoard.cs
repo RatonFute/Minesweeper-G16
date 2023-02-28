@@ -38,6 +38,22 @@ public class GameBoard : MonoBehaviour
     [SerializeField] Tile tileMan7;
     [SerializeField] Tile tileMan8;
 
+    public Tilemap tilemapSimple { get; private set; }
+    [SerializeField] Tile tileSimUnknown;
+    [SerializeField] Tile tileSimEmpty;
+    [SerializeField] Tile tileSimMine;
+    [SerializeField] Tile tileSimExploded;
+    [SerializeField] Tile tileSimFlag;
+    [SerializeField] Tile tileSim1;
+    [SerializeField] Tile tileSim2;
+    [SerializeField] Tile tileSim3;
+    [SerializeField] Tile tileSim4;
+    [SerializeField] Tile tileSim5;
+    [SerializeField] Tile tileSim6;
+    [SerializeField] Tile tileSim7;
+    [SerializeField] Tile tileSim8;
+
+
     public Tilemap tilemap { get; private set; }
     Tile tileUnknown;
     Tile tileEmpty;
@@ -53,10 +69,12 @@ public class GameBoard : MonoBehaviour
     Tile tileNum7;
     Tile tileNum8;
     
+
     private void Awake()
     {
         tilemapManuscrit = GetComponent<Tilemap>();
         tilemapClassic = GetComponent<Tilemap>();
+        tilemapSimple = GetComponent<Tilemap>();
         ChangeSkin();        
     }
 
@@ -95,6 +113,22 @@ public class GameBoard : MonoBehaviour
                 tileNum6 = tileMan6;
                 tileNum7 = tileMan7;
                 tileNum8 = tileMan8; 
+                break;
+            case 2:
+                tilemap = tilemapSimple;
+                tileUnknown = tileSimUnknown;
+                tileEmpty = tileSimEmpty;
+                tileMine = tileSimMine;
+                tileExploded = tileSimExploded;
+                tileFlag = tileSimFlag;
+                tileNum1 = tileSim1;
+                tileNum2 = tileSim2;
+                tileNum3 = tileSim3;
+                tileNum4 = tileSim4;
+                tileNum5 = tileSim5;
+                tileNum6 = tileSim6;
+                tileNum7 = tileSim7;
+                tileNum8 = tileSim8;
                 break;
 
         }

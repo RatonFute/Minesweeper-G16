@@ -34,6 +34,7 @@ public class CustomSettings : MonoBehaviour
         Height = (int)Sliderheight.value;
         SlidermineCount.maxValue = Width * Height - 1;
         MineCount = (int)SlidermineCount.value;
+
         int widthValue = (int)Sliderwidth.value;
         int heightValue = (int)Sliderheight.value;
         int mineCountValue = (int)SlidermineCount.value;

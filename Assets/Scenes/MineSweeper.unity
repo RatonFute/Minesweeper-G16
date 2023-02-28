@@ -3471,6 +3471,8 @@ MonoBehaviour:
       m_Image: {fileID: 21300000, guid: bd96f23ab21a6534f95d4b732a193f16, type: 3}
     - m_Text: Manuscrit
       m_Image: {fileID: 21300000, guid: 99dd5d6c4105c00498c8f9ebe588d503, type: 3}
+    - m_Text: Simple
+      m_Image: {fileID: 21300000, guid: 99dd5d6c4105c00498c8f9ebe588d503, type: 3}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -4049,6 +4051,19 @@ MonoBehaviour:
   tileMan6: {fileID: 11400000, guid: 66de927209ba5fb49a9ac8bc244a1934, type: 2}
   tileMan7: {fileID: 11400000, guid: 0b0133fca92cc9645bb70dc777563712, type: 2}
   tileMan8: {fileID: 11400000, guid: 39c188a53f4c5d848b99a97a6b77b716, type: 2}
+  tileSimUnknown: {fileID: 11400000, guid: d5684b80fca08e248b555fb0a1370e7f, type: 2}
+  tileSimEmpty: {fileID: 11400000, guid: 365028809331d19439d2981f211af600, type: 2}
+  tileSimMine: {fileID: 11400000, guid: 31eafe6e1d46f0c4291d39ff832e7c3e, type: 2}
+  tileSimExploded: {fileID: 11400000, guid: 43ec1feebcae38f469d0b2af0e7409e4, type: 2}
+  tileSimFlag: {fileID: 11400000, guid: b5c61b3af264053428498fc5a0bbc2cd, type: 2}
+  tileSim1: {fileID: 11400000, guid: 9fb7efa504512ff4b8541607ff119f71, type: 2}
+  tileSim2: {fileID: 11400000, guid: b5e65850eb9fea844a5aa6d497806349, type: 2}
+  tileSim3: {fileID: 11400000, guid: 1925d53d557a5bb41a5cc2b7492c9dcc, type: 2}
+  tileSim4: {fileID: 11400000, guid: a90d2f0b89958d549ace21dab8293501, type: 2}
+  tileSim5: {fileID: 11400000, guid: 44555ece53f6b9b489c34611637a6a44, type: 2}
+  tileSim6: {fileID: 11400000, guid: 744ff868ba7b94d40a0031f81cb73140, type: 2}
+  tileSim7: {fileID: 11400000, guid: 95cf54509ebb72b4fa1fa407f6880696, type: 2}
+  tileSim8: {fileID: 11400000, guid: b7557b725f1a04b4cb8f39a163c1255e, type: 2}
 --- !u!483693784 &1476669002
 TilemapRenderer:
   m_ObjectHideFlags: 0
