@@ -99,9 +99,9 @@ public class Game : MonoBehaviour
                 break;
 
             case Game.Difficulty.random:
-                width = UnityEngine.Random.Range(3, 20);
-                height = UnityEngine.Random.Range(3, 20);
-                mineCount = UnityEngine.Random.Range(1, width * height / 2);
+                width = UnityEngine.Random.Range(3, 45);
+                height = UnityEngine.Random.Range(3, 45);
+                mineCount = UnityEngine.Random.Range(1, width * height / 3);
                 break;
 
 
