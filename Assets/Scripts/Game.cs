@@ -109,10 +109,7 @@ public class Game : MonoBehaviour
 
     }
 
-    public void SetCamera(float zoom)
-    {
-        Camera.main.orthographicSize = zoom;
-    }
+    
 
 
     public void NewGame()
@@ -130,7 +127,7 @@ public class Game : MonoBehaviour
         //GenerateMines();
         //GenerateNumber();
 
-        Camera.main.orthographicSize = cameraZoom;
+        Camera.main.orthographicSize = 10;
         Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
 
         gameBoard.Draw(width, height, state);
@@ -283,7 +280,8 @@ public class Game : MonoBehaviour
             mineCount = (int)SlidermineCount.value;
         }
 
-        
+        Camera.main.orthographicSize += Input.mouseScrollDelta.y* -0.3f; //Last float = sensitivity
+
         int widthValue = (int)Sliderwidth.value;
         int heightValue = (int)Sliderheight.value;
         int mineCountValue = (int)SlidermineCount.value;
