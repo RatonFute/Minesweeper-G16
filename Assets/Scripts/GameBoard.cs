@@ -1,9 +1,11 @@
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameBoard : MonoBehaviour
 {
+    [SerializeField] TMPro.TMP_Dropdown dropdown;
     public Tilemap tilemapClassic { get; private set; }
     [SerializeField] Tile tile_Unknown;
     [SerializeField] Tile tile_Empty;
@@ -53,21 +55,47 @@ public class GameBoard : MonoBehaviour
     {
         tilemapManuscrit = GetComponent<Tilemap>();
         tilemapClassic = GetComponent<Tilemap>();
-        tilemap = tilemapClassic;
-        tileUnknown = tile_Unknown;
-        tileEmpty = tile_Empty;
-        tileMine = tile_Mine;
-        tileExploded = tile_Exploded;
-        tileFlag = tile_Flag;
-        tileNum1 = tile1;
-        tileNum2 = tile2;
-        tileNum3 = tile3;
-        tileNum4 = tile4;
-        tileNum5 = tile5;
-        tileNum6 = tile6;
-        tileNum7 = tile7;
-        tileNum8 = tile8;
+        ChangeSkin();        
+    }
 
+    public void ChangeSkin()
+    {
+        switch (dropdown.value)
+        {
+            case 0:
+                tilemap = tilemapClassic;
+                tileUnknown = tile_Unknown;
+                tileEmpty = tile_Empty;
+                tileMine = tile_Mine;
+                tileExploded = tile_Exploded;
+                tileFlag = tile_Flag;
+                tileNum1 = tile1;
+                tileNum2 = tile2;
+                tileNum3 = tile3;
+                tileNum4 = tile4;
+                tileNum5 = tile5;
+                tileNum6 = tile6;
+                tileNum7 = tile7;
+                tileNum8 = tile8; 
+                break;
+            case 1:
+                tilemap = tilemapManuscrit;
+                tileUnknown = tileManUnknown;
+                tileEmpty = tileManEmpty;
+                tileMine = tileManMine;
+                tileExploded = tileManExploded;
+                tileFlag = tileManFlag;
+                tileNum1 = tileMan1;
+                tileNum2 = tileMan2;
+                tileNum3 = tileMan3;
+                tileNum4 = tileMan4;
+                tileNum5 = tileMan5;
+                tileNum6 = tileMan6;
+                tileNum7 = tileMan7;
+                tileNum8 = tileMan8; 
+                break;
+
+        }
     }
 
     public void Draw(int _width,int _height, Cell[,] state)
@@ -133,5 +161,7 @@ public class GameBoard : MonoBehaviour
             default: return null;
         }
     }
+
+
 
 }
