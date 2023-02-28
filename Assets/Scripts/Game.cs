@@ -22,6 +22,13 @@ public class Game : MonoBehaviour
     }
     private Difficulty difficulty;
 
+    private enum Skin
+    {
+        Classic,
+        Manuscrit,
+    }
+    private Skin skin;
+
     private GameBoard gameBoard = new GameBoard();
     private Cell[,] state;
 

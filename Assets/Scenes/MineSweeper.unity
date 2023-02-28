@@ -1612,19 +1612,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4185c8aa5e3743e40b289b2be194b66f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileUnknown: {fileID: 11400000, guid: ff1b9126a44a71c4d9be8b82be2aa359, type: 2}
-  tileEmpty: {fileID: 11400000, guid: aba7b5c6f11e93a41a5ed3de8bd6a1e0, type: 2}
-  tileMine: {fileID: 11400000, guid: c31c5d9663333ac4f9dff213c166c15e, type: 2}
-  tileExploded: {fileID: 11400000, guid: 567fc7d7022be1b49bc40dce8c11f0ca, type: 2}
-  tileFlag: {fileID: 11400000, guid: f991a334f18a40d46b72b888343257e0, type: 2}
-  tileNum1: {fileID: 11400000, guid: ab8325c19d8eb394d908bb8caad121b3, type: 2}
-  tileNum2: {fileID: 11400000, guid: cd65def858a1eae4fbd2ce051c325005, type: 2}
-  tileNum3: {fileID: 11400000, guid: 5f6bd45f508a1fc4e8e4a36c3320afc9, type: 2}
-  tileNum4: {fileID: 11400000, guid: ce21af992c75069478ceb42a102f07a4, type: 2}
-  tileNum5: {fileID: 11400000, guid: 9db804b0c6c1e474e8e54c12e78f00db, type: 2}
-  tileNum6: {fileID: 11400000, guid: f0cd74fc21496574484dab09e89bd1cd, type: 2}
-  tileNum7: {fileID: 11400000, guid: c6a70755a82fc9a49877c70075b443f1, type: 2}
-  tileNum8: {fileID: 11400000, guid: e5965666da2cb4c448ad49bc76b6fe79, type: 2}
+  tile_Unknown: {fileID: 11400000, guid: ff1b9126a44a71c4d9be8b82be2aa359, type: 2}
+  tile_Empty: {fileID: 11400000, guid: aba7b5c6f11e93a41a5ed3de8bd6a1e0, type: 2}
+  tile_Mine: {fileID: 11400000, guid: c31c5d9663333ac4f9dff213c166c15e, type: 2}
+  tile_Exploded: {fileID: 11400000, guid: 567fc7d7022be1b49bc40dce8c11f0ca, type: 2}
+  tile_Flag: {fileID: 11400000, guid: f991a334f18a40d46b72b888343257e0, type: 2}
+  tile1: {fileID: 11400000, guid: ab8325c19d8eb394d908bb8caad121b3, type: 2}
+  tile2: {fileID: 11400000, guid: cd65def858a1eae4fbd2ce051c325005, type: 2}
+  tile3: {fileID: 11400000, guid: 5f6bd45f508a1fc4e8e4a36c3320afc9, type: 2}
+  tile4: {fileID: 11400000, guid: ce21af992c75069478ceb42a102f07a4, type: 2}
+  tile5: {fileID: 11400000, guid: 9db804b0c6c1e474e8e54c12e78f00db, type: 2}
+  tile6: {fileID: 11400000, guid: f0cd74fc21496574484dab09e89bd1cd, type: 2}
+  tile7: {fileID: 11400000, guid: c6a70755a82fc9a49877c70075b443f1, type: 2}
+  tile8: {fileID: 11400000, guid: e5965666da2cb4c448ad49bc76b6fe79, type: 2}
+  tileManUnknown: {fileID: 11400000, guid: 4c384d4bc09154f4aa0c341fe6da6f7c, type: 2}
+  tileManEmpty: {fileID: 11400000, guid: b3e820b960aecc34a90b4fa47e582ff3, type: 2}
+  tileManMine: {fileID: 11400000, guid: e32e335d15d9ca041946219c1f297546, type: 2}
+  tileManExploded: {fileID: 11400000, guid: b7a010bd458160c4a9e1d5254cef873d, type: 2}
+  tileManFlag: {fileID: 11400000, guid: 464e4b1b811cf2245b02be51487b5ace, type: 2}
+  tileMan1: {fileID: 11400000, guid: 478a90a2192b051488c4c6a5214c45df, type: 2}
+  tileMan2: {fileID: 11400000, guid: 294c18258d7a81a4d89977ed945ecf1e, type: 2}
+  tileMan3: {fileID: 11400000, guid: bb20adfac5f6d124b9cc2bb78bf4cb9f, type: 2}
+  tileMan4: {fileID: 11400000, guid: e4e686a6b1fcaab4dbc158afd622a577, type: 2}
+  tileMan5: {fileID: 11400000, guid: 6c89e9d11ec1ce24fa36423a1b7ae7d7, type: 2}
+  tileMan6: {fileID: 11400000, guid: 66de927209ba5fb49a9ac8bc244a1934, type: 2}
+  tileMan7: {fileID: 11400000, guid: 0b0133fca92cc9645bb70dc777563712, type: 2}
+  tileMan8: {fileID: 11400000, guid: 39c188a53f4c5d848b99a97a6b77b716, type: 2}
 --- !u!483693784 &1476669002
 TilemapRenderer:
   m_ObjectHideFlags: 0
