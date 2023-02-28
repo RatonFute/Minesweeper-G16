@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
@@ -33,6 +34,7 @@ public class Game : MonoBehaviour
     private Skin skin;
 
     private GameBoard gameBoard = new GameBoard();
+    private CustomSettings customSetting = new CustomSettings();
     private Cell[,] state;
 
     private bool gameOver = true;
@@ -52,9 +54,8 @@ public class Game : MonoBehaviour
     private void Awake()
     {
         gameBoard = GetComponentInChildren<GameBoard>();
-        Slider heightSetting = Sliderheight.GetComponent<Slider>();
-        Slider widthSetting = Sliderwidth.GetComponent<Slider>();
-        Slider mineCountSetting = SlidermineCount.GetComponent<Slider>();
+        customSetting = GetComponent<CustomSettings>();
+        
     }
 
     public void DropDownSelectDifficulty()
@@ -66,7 +67,6 @@ public class Game : MonoBehaviour
             case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
             case 3: difficulty = Game.Difficulty.custom; Debug.Log("custom"); break;
             case 4: difficulty = Game.Difficulty.random; Debug.Log("Random"); break;
-
         }
     }
     public void setDifficulty()
@@ -95,7 +95,9 @@ public class Game : MonoBehaviour
                 cameraZoom = 10;
                 break;
             case Game.Difficulty.custom:
+
                 customGame = true;
+
                 break;
 
             case Game.Difficulty.random:
@@ -104,16 +106,29 @@ public class Game : MonoBehaviour
                 mineCount = UnityEngine.Random.Range(1, width * height / 3);
                 break;
 
-
+            default: 
+                customGame = false;
+                width = 10;
+                height = 10;
+                mineCount = 10;
+                cameraZoom = 10;
+                break;
         }
 
     }
 
 
 
+    public void getCustomSettings()
+    {
+            width = customSetting.Width;
+            height = customSetting.Height;
+            mineCount = customSetting.MineCount;
+    }
 
     public void NewGame()
     {
+    
         score = 0;
         timePass = 0;
         firstClick = true;
@@ -124,8 +139,9 @@ public class Game : MonoBehaviour
 
         GenerateCelles();
 
-        //GenerateMines();
-        //GenerateNumber();
+        Camera.main.orthographicSize = cameraZoom;
+        Camera.main.transform.position = new Vector3(width/2,height/2,-10);
+
 
         Camera.main.orthographicSize = 10;
         Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
@@ -230,7 +246,9 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-
+        int widthValue;
+        int heightValue;
+        int mineCountValue;
         if (!gameOver)
         {
             if (Input.anyKey)
@@ -275,6 +293,7 @@ public class Game : MonoBehaviour
             timePass = 0;
             tempScore = 0;
         }
+
         if (customGame)
         {
 
@@ -282,19 +301,17 @@ public class Game : MonoBehaviour
             height = (int)Sliderheight.value;
             SlidermineCount.maxValue = width * height - 1;
             mineCount = (int)SlidermineCount.value;
+            widthValue = (int)Sliderwidth.value;
+            heightValue = (int)Sliderheight.value;
+            mineCountValue = (int)SlidermineCount.value;
+            widthText.text = widthValue.ToString();
+            heightText.text = heightValue.ToString();
+            mineCountText.text = mineCountValue.ToString();
         }
 
         Camera.main.orthographicSize += Input.mouseScrollDelta.y * -0.3f; //Last float = sensitivity
 
-        int widthValue = (int)Sliderwidth.value;
-        int heightValue = (int)Sliderheight.value;
-        int mineCountValue = (int)SlidermineCount.value;
-        widthText.text = widthValue.ToString();
-        heightText.text = heightValue.ToString();
-        mineCountText.text = mineCountValue.ToString();
-
-
-
+        
     }
 
     private void move()
