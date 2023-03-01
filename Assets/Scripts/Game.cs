@@ -16,6 +16,10 @@ public class Game : MonoBehaviour
     bool firstClick;
     bool customGame;
 
+    int widthValue;
+    int heightValue;
+    int mineCountValue;
+
     private enum Difficulty
     {
         easy,
@@ -49,13 +53,14 @@ public class Game : MonoBehaviour
     [SerializeField] Slider Sliderwidth;
     [SerializeField] Slider Sliderheight;
     [SerializeField] Slider SlidermineCount;
+    [SerializeField] ParticleSystem explosion;
+    [SerializeField] AudioSource explosionSound;
     float timePass = 0;
 
     private void Awake()
     {
         gameBoard = GetComponentInChildren<GameBoard>();
         customSetting = GetComponent<CustomSettings>();
-        
     }
 
     public void DropDownSelectDifficulty()
@@ -82,22 +87,26 @@ public class Game : MonoBehaviour
                 mineCount = 10;
                 cameraZoom = 10;
                 break;
+
             case Game.Difficulty.medium:
                 width = 12;
                 height = 12;
                 mineCount = 25;
                 cameraZoom = 10;
                 break;
+
             case Game.Difficulty.hard:
                 width = 16;
                 height = 16;
                 mineCount = 40;
                 cameraZoom = 10;
                 break;
+
             case Game.Difficulty.custom:
-
-                customGame = true;
-
+                width = (int)Sliderwidth.value;
+                height = (int)Sliderheight.value;
+                SlidermineCount.maxValue = width * height - 1;
+                mineCount = (int)SlidermineCount.value;
                 break;
 
             case Game.Difficulty.random:
@@ -246,9 +255,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        int widthValue;
-        int heightValue;
-        int mineCountValue;
+        
         if (!gameOver)
         {
             if (Input.anyKey)
@@ -294,21 +301,12 @@ public class Game : MonoBehaviour
             tempScore = 0;
         }
 
-        if (customGame)
-        {
-
-            width = (int)Sliderwidth.value;
-            height = (int)Sliderheight.value;
-            SlidermineCount.maxValue = width * height - 1;
-            mineCount = (int)SlidermineCount.value;
-            widthValue = (int)Sliderwidth.value;
-            heightValue = (int)Sliderheight.value;
-            mineCountValue = (int)SlidermineCount.value;
-            widthText.text = widthValue.ToString();
-            heightText.text = heightValue.ToString();
-            mineCountText.text = mineCountValue.ToString();
-        }
-
+        widthValue = (int)Sliderwidth.value;
+        heightValue = (int)Sliderheight.value;
+        mineCountValue = (int)SlidermineCount.value;
+        widthText.text = widthValue.ToString();
+        heightText.text = heightValue.ToString();
+        mineCountText.text = mineCountValue.ToString();
         Camera.main.orthographicSize += Input.mouseScrollDelta.y * -0.3f; //Last float = sensitivity
 
         
@@ -419,6 +417,12 @@ public class Game : MonoBehaviour
         cell.revealed = true;
         cell.exploded = true;
 
+        Cell temp = cell;
+        explosion.transform.position = temp.position += new Vector3Int(0, 0, -1);
+       
+        
+        
+
         state[cell.position.x, cell.position.y] = cell;
 
         for (int x = 0; x < width; x++)
@@ -434,6 +438,10 @@ public class Game : MonoBehaviour
                 }
             }
         }
+
+
+        explosion.Play();
+        explosionSound.Play();
     }
 
 
