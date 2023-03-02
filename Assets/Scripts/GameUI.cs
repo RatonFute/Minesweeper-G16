@@ -15,13 +15,15 @@ public class GameUI : MonoBehaviour
     public Slider SlidermineCount;
     public TMPro.TMP_Dropdown dropdownDifficulty;
 
-    Renderer render;
+    Canvas canvas;
     private void Awake()
     {
-        render = GetComponent<Renderer>();
+        canvas = FindAnyObjectByType<Canvas>();
+       
     }
     public void hideShow()
     {
-        render.enabled = !render.enabled;
+        canvas.enabled = !canvas.enabled;   
+       
     }
 }
