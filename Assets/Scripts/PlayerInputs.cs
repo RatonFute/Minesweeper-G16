@@ -2,7 +2,12 @@ using UnityEngine;
 
 public class PlayerInputs : MonoBehaviour
 {
-    
+    GameUI gameUI;
+
+    private void Awake()
+    {
+        gameUI = GetComponentInParent<GameUI>();
+    }
     public float MouseScroll { get; private set; }
     public void move(float cameraSpeed)
     {
@@ -22,6 +27,10 @@ public class PlayerInputs : MonoBehaviour
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             Camera.main.transform.position += new Vector3(cameraSpeed * Time.deltaTime, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.H))
+        {
+            gameUI.hideShow();
         }
     }
 

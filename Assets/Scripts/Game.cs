@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -24,29 +23,20 @@ public class Game : MonoBehaviour
     bool firstClick;
 
     bool gameOver = true;
-    bool customGame = false;
+    public bool customGame = false;
     
 
-    private enum Difficulty
-    {
-        easy,
-        medium,
-        hard,
-        custom,
-        random,
-    }
-    private Difficulty difficulty;
 
     private GameBoard gameBoard;
     private CustomSettings customSetting;
     private PlayerInputs inputPlayer;
     private CellsGeneration cellsGeneration;
+    private GameUI gameUI;
+    private ChoseDifficulty difficulty;
     public Cell[,] state;
 
-    [SerializeField] TMPro.TMP_Dropdown dropdown;
-    [SerializeField] UnityEngine.UI.Text timerText;
-    [SerializeField] UnityEngine.UI.Text winLoseText;
-    [SerializeField] UnityEngine.UI.Text scoreText;
+    
+    
 
     [SerializeField] ParticleSystem explosion;
     [SerializeField] AudioSource explosionSound;
@@ -61,72 +51,13 @@ public class Game : MonoBehaviour
         customSetting = GetComponent<CustomSettings>();
         inputPlayer = GetComponent<PlayerInputs>();
         cellsGeneration = GetComponent<CellsGeneration>();
-    }
-
-    public void DropDownSelectDifficulty()
-    {
-        switch (dropdown.value)
-        {
-            case 0: difficulty = Game.Difficulty.easy; Debug.Log("easy"); break;
-            case 1: difficulty = Game.Difficulty.medium; Debug.Log("medium"); break;
-            case 2: difficulty = Game.Difficulty.hard; Debug.Log("hard"); break;
-            case 3: difficulty = Game.Difficulty.custom; Debug.Log("custom"); break;
-            case 4: difficulty = Game.Difficulty.random; Debug.Log("Random"); break;
-        }
-    }
-    public void setDifficulty()
-    {
-        
-        customGame = false;
-        switch (difficulty)
-        {
-
-            case Game.Difficulty.easy:
-                Width = 10;
-                Height = 10;
-                MineCount = 10;
-                customGame = false;
-                break;
-
-            case Game.Difficulty.medium:
-                Width = 12;
-                Height = 12;
-                MineCount = 25;
-                customGame = false;
-                break;
-
-            case Game.Difficulty.hard:
-                Width = 16;
-                Height = 16;
-                MineCount = 40;
-                customGame = false;
-                break;
-
-            case Game.Difficulty.custom:
-                getCustomSettings();
-                customGame = true;
-                break;
-
-            case Game.Difficulty.random:
-                Width = UnityEngine.Random.Range(3, 45);
-                Height = UnityEngine.Random.Range(3, 45);
-                MineCount = UnityEngine.Random.Range(1, Width * Height / 3);
-                customGame = false;
-                break;
-
-            default: 
-                Width = 10;
-                Height = 10;
-                MineCount = 10;
-                customGame = false;
-                break;
-        }
-
+        gameUI = GetComponent<GameUI>();
+        difficulty = GetComponent<ChoseDifficulty>();
     }
 
 
 
-    private void getCustomSettings()
+    public void getCustomSettings()
     {
             Width = customSetting.Width;
             Height = customSetting.Height;
@@ -147,8 +78,8 @@ public class Game : MonoBehaviour
         score = 0;
         timePass = 0;
         firstClick = true;
-        winLoseText.text = "";
-        setDifficulty();
+        gameUI.winLoseText.text = "";
+        difficulty.setDifficulty();
         state = new Cell[Width, Height];
         gameOver = false;
 
@@ -198,7 +129,7 @@ public class Game : MonoBehaviour
 
             timePass += Time.deltaTime;
             tempTime = (int)timePass;
-            timerText.text = "Time : " + tempTime.ToString();
+            gameUI.timerText.text = "Time : " + tempTime.ToString();
 
 
 
@@ -207,7 +138,7 @@ public class Game : MonoBehaviour
                 score = 0;
             }
             tempScore = (int)score;
-            scoreText.text = "Your score : " + tempScore.ToString();
+            gameUI.scoreText.text = "Your score : " + tempScore.ToString();
 
             if (easterEgg)
             {
@@ -218,9 +149,9 @@ public class Game : MonoBehaviour
         else
         {
             timeLastGame = tempTime; 
-            timerText.text = "You played " + timeLastGame.ToString() + "s";
+            gameUI.timerText.text = "You played " + timeLastGame.ToString() + "s";
             scoreLastGame = tempScore;
-            scoreText.text = "Your last score : " + scoreLastGame.ToString();
+            gameUI.scoreText.text = "Your last score : " + scoreLastGame.ToString();
             timePass = 0;
             tempScore = 0;
         }
@@ -315,7 +246,7 @@ public class Game : MonoBehaviour
 
     private void Explode(Cell cell)
     {
-        winLoseText.text = "You lost !";
+        gameUI.winLoseText.text = "You lost !";
         gameOver = true;
         cell.revealed = true;
         cell.exploded = true;
@@ -363,7 +294,7 @@ public class Game : MonoBehaviour
         }
 
 
-        winLoseText.text = "You won !";
+        gameUI.winLoseText.text = "You won !";
         gameOver = true;
         Vector3 tempCameraPos = Camera.main.transform.position;
         winParticule.transform.position = tempCameraPos += new Vector3Int(-16, 11, 0);
@@ -435,7 +366,7 @@ public class Game : MonoBehaviour
             winParticule.transform.position = tempCameraPos += new Vector3Int(-16, 11, 0);
             winParticule2.transform.position = tempCameraPos += new Vector3Int(28, 10, 0);
 
-            winLoseText.text = "You won !";
+            gameUI.winLoseText.text = "You won !";
             winSound.Play();
             winParticule.Play();
             winParticule2.Play();

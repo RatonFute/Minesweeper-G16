@@ -4,27 +4,28 @@ using UnityEngine.UI;
 public class CustomSettings : MonoBehaviour
 {
 
-    [SerializeField] UnityEngine.UI.Text widthText;
-    [SerializeField] UnityEngine.UI.Text heightText;
-    [SerializeField] UnityEngine.UI.Text mineCountText;
-    [SerializeField] Slider Sliderwidth;
-    [SerializeField] Slider Sliderheight;
-    [SerializeField] Slider SlidermineCount;
+    GameUI renderUI;
 
     public int Width { get; set; }
     public int Height { get; set; }
     public int MineCount { get; set; }
 
+    private void Awake()
+    {
+        renderUI = GetComponentInParent<GameUI>();
+    }
+
     private void Update()
     {
-        Width = (int)Sliderwidth.value;
-        Height = (int)Sliderheight.value;
-        SlidermineCount.maxValue = Width * Height - 1;
-        MineCount = (int)SlidermineCount.value;
+        
+        Width = (int)renderUI.Sliderwidth.value;
+        Height = (int)renderUI.Sliderheight.value;
+        renderUI.SlidermineCount.maxValue = Width * Height - 1;
+        MineCount = (int)renderUI.SlidermineCount.value;
 
-        widthText.text = Width.ToString();
-        heightText.text = Height.ToString();
-        mineCountText.text = MineCount.ToString();
+        renderUI.widthText.text = Width.ToString();
+        renderUI.heightText.text = Height.ToString();
+        renderUI.mineCountText.text = MineCount.ToString();
     }
    
 
