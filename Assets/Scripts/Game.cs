@@ -15,6 +15,7 @@ public class Game : MonoBehaviour
     float cameraZoom;
     bool firstClick;
     bool customGame;
+    bool easterEgg;
 
     int widthValue;
     int heightValue;
@@ -55,6 +56,9 @@ public class Game : MonoBehaviour
     [SerializeField] Slider SlidermineCount;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] AudioSource explosionSound;
+    [SerializeField] ParticleSystem winParticule;
+    [SerializeField] ParticleSystem winParticule2;
+    [SerializeField] AudioSource winSound;
     float timePass = 0;
 
     private void Awake()
@@ -115,7 +119,7 @@ public class Game : MonoBehaviour
                 mineCount = UnityEngine.Random.Range(1, width * height / 3);
                 break;
 
-            default: 
+            default:
                 customGame = false;
                 width = 10;
                 height = 10;
@@ -130,14 +134,21 @@ public class Game : MonoBehaviour
 
     public void getCustomSettings()
     {
-            width = customSetting.Width;
-            height = customSetting.Height;
-            mineCount = customSetting.MineCount;
+        width = customSetting.Width;
+        height = customSetting.Height;
+        mineCount = customSetting.MineCount;
     }
 
     public void NewGame()
     {
-    
+        easterEgg = false;
+        Camera.main.transform.rotation = new Quaternion(0, 0, 0, 0);
+        winSound.Stop();
+        winParticule.Stop();
+        winParticule2.Stop();
+        explosionSound.Stop();
+        explosion.Stop();
+
         score = 0;
         timePass = 0;
         firstClick = true;
@@ -149,7 +160,7 @@ public class Game : MonoBehaviour
         GenerateCelles();
 
         Camera.main.orthographicSize = cameraZoom;
-        Camera.main.transform.position = new Vector3(width/2,height/2,-10);
+        Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
 
 
         Camera.main.orthographicSize = 10;
@@ -255,7 +266,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        
+
         if (!gameOver)
         {
             if (Input.anyKey)
@@ -291,6 +302,11 @@ public class Game : MonoBehaviour
             tempScore = (int)score;
             scoreText.text = "Your score : " + tempScore.ToString();
 
+            if (easterEgg)
+            {
+                Camera.main.transform.Rotate(0,0,0.1f);
+            }
+
         }
         else
         {
@@ -309,7 +325,7 @@ public class Game : MonoBehaviour
         mineCountText.text = mineCountValue.ToString();
         Camera.main.orthographicSize += Input.mouseScrollDelta.y * -0.3f; //Last float = sensitivity
 
-        
+
     }
 
     private void move()
@@ -417,11 +433,11 @@ public class Game : MonoBehaviour
         cell.revealed = true;
         cell.exploded = true;
 
-        Cell temp = cell;
-        explosion.transform.position = temp.position += new Vector3Int(0, 0, -1);
-       
-        
-        
+        Cell tempCell = cell;
+        explosion.transform.position = tempCell.position += new Vector3Int(0, 0, -1);
+
+
+
 
         state[cell.position.x, cell.position.y] = cell;
 
@@ -462,6 +478,12 @@ public class Game : MonoBehaviour
 
         winLoseText.text = "You won !";
         gameOver = true;
+        Vector3 tempCameraPos = Camera.main.transform.position;
+        winParticule.transform.position = tempCameraPos += new Vector3Int(-16, 11, 0);
+        winParticule2.transform.position = tempCameraPos += new Vector3Int(28, 10, 0);
+        winSound.Play();
+        winParticule.Play();
+        winParticule2.Play();
 
         for (int x = 0; x < width; x++)
         {
@@ -473,6 +495,10 @@ public class Game : MonoBehaviour
                 {
                     cell.flagged = true;
                     state[x, y] = cell;
+                }
+                else
+                {
+                    cell.revealed = true;
                 }
             }
         }
@@ -495,8 +521,6 @@ public class Game : MonoBehaviour
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-
-
     private void FlagThemAll()
     {
         bool cheat = false;
@@ -517,10 +541,28 @@ public class Game : MonoBehaviour
                 }
             }
         }
+        if (count == (mineCount / 3) * 2) easterEgg = true;
         if (count == mineCount && !cheat)
         {
+            Vector3 tempCameraPos = Camera.main.transform.position;
+            winParticule.transform.position = tempCameraPos += new Vector3Int(-16, 11, 0);
+            winParticule2.transform.position = tempCameraPos += new Vector3Int(28, 10, 0);
+
             winLoseText.text = "You won !";
+            winSound.Play();
+            winParticule.Play();
+            winParticule2.Play();
             gameOver = true;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    Cell cell = state[x, y];
+                    cell.revealed = true;
+
+                }
+            }
         }
     }
 
