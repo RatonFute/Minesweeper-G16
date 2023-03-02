@@ -1,24 +1,30 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
-    int width;
-    int height;
-    int mineCount;
+    public int Width { set; get; }
+    public int Height { set; get; }
+    public int MineCount { set; get; }
+    float score;
+
     int tempScore;
     int tempTime;
-    int timeLastGame;
-    float score;
-    float cameraZoom;
-    bool firstClick;
-    bool customGame;
+    float timePass = 0;
 
-    int widthValue;
-    int heightValue;
-    int mineCountValue;
+    int timeLastGame;
+    int scoreLastGame;
+
+    float cameraZoom = 10;
+    float cameraSpeed = 4;
+    float scrollSensitivity = 0.3f;
+    
+    //use to check first click in a game
+    bool firstClick;
+
+    bool gameOver = true;
+    bool customGame = false;
+    
 
     private enum Difficulty
     {
@@ -30,37 +36,27 @@ public class Game : MonoBehaviour
     }
     private Difficulty difficulty;
 
-    private enum Skin
-    {
-        Classic,
-        Manuscrit,
-    }
-    private Skin skin;
-
-    private GameBoard gameBoard = new GameBoard();
-    private CustomSettings customSetting = new CustomSettings();
-    private Cell[,] state;
-
-    private bool gameOver = true;
+    private GameBoard gameBoard;
+    private CustomSettings customSetting;
+    private PlayerInputs inputPlayer;
+    private CellsGeneration cellsGeneration;
+    public Cell[,] state;
 
     [SerializeField] TMPro.TMP_Dropdown dropdown;
     [SerializeField] UnityEngine.UI.Text timerText;
     [SerializeField] UnityEngine.UI.Text winLoseText;
     [SerializeField] UnityEngine.UI.Text scoreText;
-    [SerializeField] UnityEngine.UI.Text widthText;
-    [SerializeField] UnityEngine.UI.Text heightText;
-    [SerializeField] UnityEngine.UI.Text mineCountText;
-    [SerializeField] Slider Sliderwidth;
-    [SerializeField] Slider Sliderheight;
-    [SerializeField] Slider SlidermineCount;
+
     [SerializeField] ParticleSystem explosion;
     [SerializeField] AudioSource explosionSound;
-    float timePass = 0;
+    
 
     private void Awake()
     {
         gameBoard = GetComponentInChildren<GameBoard>();
         customSetting = GetComponent<CustomSettings>();
+        inputPlayer = GetComponent<PlayerInputs>();
+        cellsGeneration = GetComponent<CellsGeneration>();
     }
 
     public void DropDownSelectDifficulty()
@@ -76,51 +72,49 @@ public class Game : MonoBehaviour
     }
     public void setDifficulty()
     {
-        //get dropdown option for the switch
+        
         customGame = false;
         switch (difficulty)
         {
 
             case Game.Difficulty.easy:
-                width = 10;
-                height = 10;
-                mineCount = 10;
-                cameraZoom = 10;
+                Width = 10;
+                Height = 10;
+                MineCount = 10;
+                customGame = false;
                 break;
 
             case Game.Difficulty.medium:
-                width = 12;
-                height = 12;
-                mineCount = 25;
-                cameraZoom = 10;
+                Width = 12;
+                Height = 12;
+                MineCount = 25;
+                customGame = false;
                 break;
 
             case Game.Difficulty.hard:
-                width = 16;
-                height = 16;
-                mineCount = 40;
-                cameraZoom = 10;
+                Width = 16;
+                Height = 16;
+                MineCount = 40;
+                customGame = false;
                 break;
 
             case Game.Difficulty.custom:
-                width = (int)Sliderwidth.value;
-                height = (int)Sliderheight.value;
-                SlidermineCount.maxValue = width * height - 1;
-                mineCount = (int)SlidermineCount.value;
+                getCustomSettings();
+                customGame = true;
                 break;
 
             case Game.Difficulty.random:
-                width = UnityEngine.Random.Range(3, 45);
-                height = UnityEngine.Random.Range(3, 45);
-                mineCount = UnityEngine.Random.Range(1, width * height / 3);
+                Width = UnityEngine.Random.Range(3, 45);
+                Height = UnityEngine.Random.Range(3, 45);
+                MineCount = UnityEngine.Random.Range(1, Width * Height / 3);
+                customGame = false;
                 break;
 
             default: 
+                Width = 10;
+                Height = 10;
+                MineCount = 10;
                 customGame = false;
-                width = 10;
-                height = 10;
-                mineCount = 10;
-                cameraZoom = 10;
                 break;
         }
 
@@ -128,12 +122,13 @@ public class Game : MonoBehaviour
 
 
 
-    public void getCustomSettings()
+    private void getCustomSettings()
     {
-            width = customSetting.Width;
-            height = customSetting.Height;
-            mineCount = customSetting.MineCount;
+            Width = customSetting.Width;
+            Height = customSetting.Height;
+            MineCount = customSetting.MineCount;
     }
+
 
     public void NewGame()
     {
@@ -143,126 +138,38 @@ public class Game : MonoBehaviour
         firstClick = true;
         winLoseText.text = "";
         setDifficulty();
-        state = new Cell[width, height];
+        state = new Cell[Width, Height];
         gameOver = false;
 
-        GenerateCelles();
+        cellsGeneration.GenerateCelles();
 
         Camera.main.orthographicSize = cameraZoom;
-        Camera.main.transform.position = new Vector3(width/2,height/2,-10);
+        Camera.main.transform.position = new Vector3(Width/2,Height/2,-10);
 
-
-        Camera.main.orthographicSize = 10;
-        Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
-
-        gameBoard.Draw(width, height, state);
+        gameBoard.Draw(Width, Height, state);
     }
 
-    private void GenerateCelles()
-    {
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Cell cell = new Cell();
-                cell.position = new Vector3Int(x, y, 0);
-                cell.type = Cell.Type.Empty;
-                state[x, y] = cell;
-            }
-        }
-    }
-
-    private void GenerateMines()
-    {
-        for (int i = 0; i < mineCount; i++)
-        {
-            int x = UnityEngine.Random.Range(0, width);
-            int y = UnityEngine.Random.Range(0, height);
-
-            while (state[x, y].type == Cell.Type.Mine)
-            {
-                x++;
-                if (x >= width)
-                {
-                    x = 0; y++;
-                    if (y >= height)
-                    {
-                        y = 0;
-                    }
-                }
-            }
-            if (!(x == MousePositionOnGameBoard().x && y == MousePositionOnGameBoard().y))
-            {
-                state[x, y].type = Cell.Type.Mine;
-            }
-        }
-    }
-
-    private void GenerateNumber()
-    {
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Cell cell = state[x, y];
-
-                if (cell.type == Cell.Type.Mine)
-                {
-                    continue;
-                }
-
-                cell.number = CountMines(x, y);
-
-                if (cell.number > 0)
-                {
-                    cell.type = Cell.Type.Number;
-                }
-
-                state[x, y] = cell;
-            }
-
-        }
-
-    }
-    private int CountMines(int cellX, int cellY)
-    {
-        int count = 0;
-
-        for (int adjacentX = -1; adjacentX <= 1; adjacentX++)
-        {
-            for (int adjacentY = -1; adjacentY <= 1; adjacentY++)
-            {
-                if (adjacentX == 0 && adjacentY == 0)
-                {
-                    continue;
-                }
-
-                int x = cellX + adjacentX;
-                int y = cellY + adjacentY;
-
-
-
-                if (GetCell(x, y).type == Cell.Type.Mine)
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count;
-    }
-
+    
 
     private void Update()
     {
         
         if (!gameOver)
         {
-            if (Input.anyKey)
+            if (inputPlayer != null)
             {
-                move();
+                if (Input.anyKey)
+                {
+                    inputPlayer.move(cameraSpeed);
+                }
+                Camera.main.orthographicSize += inputPlayer.getMouseScroll(scrollSensitivity);
             }
-            if (Input.GetMouseButtonDown(1))
+            else
+            {
+                Debug.Log("error, can't find inputPlayer");
+            }
+            
+                if (Input.GetMouseButtonDown(1))
             {
                 Flag();
             }
@@ -271,8 +178,8 @@ public class Game : MonoBehaviour
 
                 if (firstClick)
                 {
-                    GenerateMines();
-                    GenerateNumber();
+                    cellsGeneration.GenerateMines();
+                    cellsGeneration.GenerateNumber();
                     firstClick = false;
                 }
                 Reveal();
@@ -294,43 +201,23 @@ public class Game : MonoBehaviour
         }
         else
         {
-            timeLastGame = (int)timePass;
-            tempTime = timeLastGame;
-            timerText.text = "You played " + tempTime.ToString() + "s";
+            timeLastGame = tempTime; 
+            timerText.text = "You played " + timeLastGame.ToString() + "s";
+            scoreLastGame = tempScore;
+            scoreText.text = "Your last score : " + scoreLastGame.ToString();
             timePass = 0;
             tempScore = 0;
         }
-
-        widthValue = (int)Sliderwidth.value;
-        heightValue = (int)Sliderheight.value;
-        mineCountValue = (int)SlidermineCount.value;
-        widthText.text = widthValue.ToString();
-        heightText.text = heightValue.ToString();
-        mineCountText.text = mineCountValue.ToString();
-        Camera.main.orthographicSize += Input.mouseScrollDelta.y * -0.3f; //Last float = sensitivity
-
+        if (customGame)
+        {
+            getCustomSettings();
+        }
         
+        
+
     }
 
-    private void move()
-    {
-        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.UpArrow))
-        {
-            Camera.main.transform.position += new Vector3(0, 4 * Time.deltaTime, 0);
-        }
-        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            Camera.main.transform.position += new Vector3(-4 * Time.deltaTime, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            Camera.main.transform.position += new Vector3(0, -4 * Time.deltaTime, 0);
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            Camera.main.transform.position += new Vector3(4 * Time.deltaTime, 0, 0);
-        }
-    }
+    
 
 
     private void Flag()
@@ -344,12 +231,12 @@ public class Game : MonoBehaviour
         }
         cell.flagged = !cell.flagged;
         state[MousePositionOnGameBoard().x, MousePositionOnGameBoard().y] = cell;
-        gameBoard.Draw(width, height, state);
+        gameBoard.Draw(Width, Height, state);
         FlagThemAll();
 
     }
 
-    private Vector3Int MousePositionOnGameBoard()
+    public Vector3Int MousePositionOnGameBoard()
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = gameBoard.tilemap.WorldToCell(worldPosition);
@@ -384,7 +271,7 @@ public class Game : MonoBehaviour
 
 
 
-        gameBoard.Draw(width, height, state);
+        gameBoard.Draw(Width, Height, state);
     }
 
     private void Flood(Cell cell)
@@ -425,9 +312,9 @@ public class Game : MonoBehaviour
 
         state[cell.position.x, cell.position.y] = cell;
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 cell = state[x, y];
 
@@ -447,9 +334,9 @@ public class Game : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 Cell cell = state[x, y];
                 if (cell.type != Cell.Type.Mine && !cell.revealed)
@@ -463,9 +350,9 @@ public class Game : MonoBehaviour
         winLoseText.text = "You won !";
         gameOver = true;
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 Cell cell = state[x, y];
 
@@ -478,7 +365,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    private Cell GetCell(int x, int y)
+    public Cell GetCell(int x, int y)
     {
         if (IsValid(x, y))
         {
@@ -492,7 +379,7 @@ public class Game : MonoBehaviour
 
     private bool IsValid(int x, int y)
     {
-        return x >= 0 && x < width && y >= 0 && y < height;
+        return x >= 0 && x < Width && y >= 0 && y < Height;
     }
 
 
@@ -501,9 +388,9 @@ public class Game : MonoBehaviour
     {
         bool cheat = false;
         int count = 0;
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 Cell cell = state[x, y];
 
@@ -517,7 +404,7 @@ public class Game : MonoBehaviour
                 }
             }
         }
-        if (count == mineCount && !cheat)
+        if (count == MineCount && !cheat)
         {
             winLoseText.text = "You won !";
             gameOver = true;
