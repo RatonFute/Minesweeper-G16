@@ -11,7 +11,6 @@ public class Game : MonoBehaviour
     int tempScore;
     int tempTime;
 
-    bool firstClick;
     bool easterEgg;
 
     int timeLastGame;
@@ -156,7 +155,7 @@ public class Game : MonoBehaviour
         cellsGeneration.GenerateCelles();
 
         Camera.main.orthographicSize = cameraZoom;
-        Camera.main.transform.position = new Vector3(width / 2, height / 2, -10);
+        Camera.main.transform.position = new Vector3(Width / 2, Height / 2, -10);
 
         gameBoard.Draw(Width, Height, state);
     }
@@ -429,8 +428,8 @@ public class Game : MonoBehaviour
                 }
             }
         }
-        if (count == (mineCount / 3) * 2) easterEgg = true;
-        if (count == mineCount && !cheat)
+        if (count == (MineCount / 3) * 2) easterEgg = true;
+        if (count == MineCount && !cheat)
         {
             Vector3 tempCameraPos = Camera.main.transform.position;
             winParticule.transform.position = tempCameraPos += new Vector3Int(-16, 11, 0);
@@ -442,9 +441,9 @@ public class Game : MonoBehaviour
             winParticule2.Play();
             gameOver = true;
 
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
                     Cell cell = state[x, y];
                     cell.revealed = true;
